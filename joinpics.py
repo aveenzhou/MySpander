@@ -6,7 +6,7 @@ Created on 2015-9-25
 '''
 from PIL import Image
 import os
-
+#test dev
 def join_pics(pic_dir,save_dir):
     files=os.listdir(pic_dir) 
     width=0
