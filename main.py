@@ -5,6 +5,7 @@ Created on 2015-9-25
 @author: Administrator
 '''
 import re
+import multiprocessing
 from ConfigParser import ConfigParser
 from download import down_pics_to_folder
 from joinpics import join_pics
@@ -14,7 +15,7 @@ from pastelogo import pasteLogo
 cf=ConfigParser()
 cf.read('config.ini')
 
-reg_lst=re.compile(r"^\[([\s\S]+)\]$")
+reg_lst=re.compile(r"^\[([\s\S]+)\]$")#\s\S匹配任意字符包括换行符合空白
 re_int =re.compile(r"^(\d+)$")
 re_float = re.compile(r"^(\d+\.\d+)$")
 
@@ -47,6 +48,7 @@ print logo_path
 logo_x=getIni('logo','x')
 logo_y=getIni('logo','y')
 mainflag = getIni('flag','mainPic')
+isconcurrent = getIni('flag','isconcurrent')
 
 
 def getData(source_url,mainflag,store_dir):
@@ -61,10 +63,17 @@ def getData(source_url,mainflag,store_dir):
 
 
 if __name__=='__main__':
-    
     if type(source_url) is list:
-        for url in source_url:
-            getData(url,mainflag,store_dir)
+        if isconcurrent:
+            pool = multiprocessing.Pool()
+            for url in source_url:
+                pool.apply_async(getData,(url,mainflag,store_dir))
+                
+            pool.close()
+            pool.join()
+        else:
+            for url in source_url:
+                getData(url,mainflag,store_dir)
     else:
         getData(source_url,mainflag,store_dir)
     
