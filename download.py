@@ -19,7 +19,8 @@ def down_pics_to_folder(source_url,mainflag=0,dir=''):
     '''
     
     try:
-        r=http.request('GET',source_url)
+        agent_header={"User-Agent":r"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"}
+        r=http.request('GET',source_url,headers=agent_header)
         if r.status==200:
             html_doc=r.data
             
